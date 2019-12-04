@@ -10,7 +10,7 @@
 
     ```ruby
     # Gemfile
-    gem 's3_uploader', git: 'https://archfish.github.com/s3_uploader'
+    gem 's3_uploader', git: 'https://github.com/archfish/s3_uploader.git'
     ```
 
   - 配置S3连接参数
