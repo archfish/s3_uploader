@@ -13,7 +13,7 @@ class S3UploaderController < ApplicationController
       view_context.file_field_tag(:file, data: {
             s3endpoint: presigned_url,
             fields: presigned_fields.to_json
-          }.merged(ex_opts))
+          }.merge(ex_opts))
     ]
 
     render text: result.join("\n"), layout: nil

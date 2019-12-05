@@ -3,7 +3,7 @@ module ApplicationHelper
     clazz = (f&.object&.class || options.delete(:clazz)).to_s
     css_class = "s3_uploader #{options.delete(:class)}"
     base_data = options.merge(
-      target: SecureRandom.urlsafe_base64(10),
+      modal_id: 'i' + SecureRandom.urlsafe_base64(10),
       toggle: 'uploader-modal',
       clazz: clazz,
       url: s3_uploader_index_path(field: attr_, clazz: clazz)

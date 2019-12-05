@@ -96,7 +96,7 @@ var send2S3 = function (file, data, callback) {
       FD.append('field', data.field)
       XHR.open('GET', data.url)
 
-      current.uid = current.uid || Math.random().toString(36).substring(2);
+      current.uid = current.uid || ('a' + Math.random().toString(36).substring(2));
       let class_mark = current.uid
 
       current.setAttribute('disabled', true)
@@ -109,12 +109,12 @@ var send2S3 = function (file, data, callback) {
             ).replace(
               '{{content}}', XHR.response
             ).replace(
-              '{{modalID}}', data.id
+              '{{modalID}}', data.modalId
             ).replace(
               '{{output}}', 'input.'+ class_mark
             );
           current.insertAdjacentHTML('afterend', currentModal)
-          bindUploadModalEvent(document.getElementById(data.id))
+          bindUploadModalEvent(document.getElementById(data.modalId))
         }
         current.removeAttribute('disabled')
       }
