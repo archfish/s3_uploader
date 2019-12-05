@@ -48,7 +48,7 @@ module S3Uploader
             )
           )
 
-          [x.url, x.fields]
+          [x.url, x.fields, ex_opts]
         end
 
         def #{column}

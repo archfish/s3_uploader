@@ -6,14 +6,14 @@ class S3UploaderController < ApplicationController
 
     show_name = clazz.human_attribute_name(selected_field)
 
-    presigned_url, presigned_fields = clazz.new.send("#{selected_field}_presigned")
+    presigned_url, presigned_fields, ex_opts = clazz.new.send("#{selected_field}_presigned")
 
     result = [
       view_context.label_tag(:file, show_name),
       view_context.file_field_tag(:file, data: {
             s3endpoint: presigned_url,
             fields: presigned_fields.to_json
-          })
+          }.merged(ex_opts))
     ]
 
     render text: result.join("\n"), layout: nil
