@@ -5,12 +5,13 @@ var send2S3 = function (file, data, callback) {
 
     let url = data.s3endpoint
     let fields = JSON.parse(data.fields)
+    let filename = file.name
 
     var XHR = new XMLHttpRequest();
     var FD  = new FormData();
 
     // 如果限制了key的格式，直接用文件名替换占位符
-    fields['key'] = (fields['key'] || '').replace('${filename}', file.name)
+    fields['key'] = (fields['key'] || '').replace('${filename}', filename)
 
     for(key in fields) {
       FD.append(key, fields[key])
@@ -32,7 +33,7 @@ var send2S3 = function (file, data, callback) {
 
     // Define what happens on successful data submission
     XHR.addEventListener('load', function(event) {
-      callback(fields['key']);
+      callback(filename);
       alert('Yeah! Data sent and response loaded.');
     });
 
