@@ -1,6 +1,7 @@
 module S3Uploader
   class Base
     SCHEME = 's3'.freeze
+    FILENAME_PALCEHOLD = '${filename}'.freeze
     attr_reader :model, :mounted_as, :s3_object
 
     def initialize(model, mounted_as, options = {})
@@ -11,7 +12,7 @@ module S3Uploader
     end
 
     def to_s
-      s3_object&.key.to_s
+      s3_object&.key.to_s.sub(key.sub(FILENAME_PALCEHOLD, ''), '')
     end
 
     def bucket
@@ -23,13 +24,13 @@ module S3Uploader
     # 'public-read' : 'private'
     def acl
       @options.fetch(__method__) {
-        'public-read'
+        'private'
       }
     end
 
     def key
       @options.fetch(__method__) {
-        "#{store_path}/${filename}"
+        "#{store_path}/#{FILENAME_PALCEHOLD}"
       }
     end
 
@@ -50,24 +51,22 @@ module S3Uploader
     end
 
     def external_url
-      url_ = case acl
+      case acl
       when 'public-read'
         s = model&.updated_at || model&.created_at
         s = "?t=#{s.tv_sec}" if s.present?
 
-        s3_object.public_url + s.to_s
+        URI.encode(s3_object.public_url + s.to_s)
       else
         s3_object.presigned_url(:get, {expires_in: signature_expiration})
       end
-
-      URI.encode(url_)
     end
 
     def persistence_path(filename)
       return nil if filename.blank?
       return filename if filename.start_with?(SCHEME)
 
-      "#{SCHEME}://#{bucket}/#{key}".sub('${filename}', filename)
+      "#{SCHEME}://#{bucket}/#{key}".sub(FILENAME_PALCEHOLD, filename)
     end
 
     def retrieve_from_s3!(path)
